@@ -1,0 +1,40 @@
+bundle:
+  name: my_dab_project
+  description: "Modular ETL project — bronze to silver pipeline on Azure Databricks"
+
+variables:
+  catalog:
+    default: dev_catalog
+  schema:
+    default: bronze
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://dbc-b1e54ca5-c22a.cloud.databricks.com
+
+  prod:
+    mode: production
+    workspace:
+      host: https://dbc-b1e54ca5-c22a.cloud.databricks.com
+
+resources:
+  pipelines:
+    bronze_to_silver:
+      name: "Bronze to Silver Pipeline"
+      target: ${var.schema}
+      libraries:
+        - notebook:
+            path: ./notebooks/pipeline.py
+      configuration:
+        env: dev
+
+  jobs:
+    etl_job:
+      name: "ETL Job"
+      tasks:
+        - task_key: run_pipeline
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.bronze_to_silver.id}
