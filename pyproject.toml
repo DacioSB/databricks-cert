@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "my_dab_project"
+version = "0.1.0"
+description = "ETL transformations for Databricks"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
